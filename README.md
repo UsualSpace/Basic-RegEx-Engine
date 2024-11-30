@@ -6,4 +6,13 @@ discrete structures course I took in college.
 I eventually want to incorporate some of the common features I've seen in other regular expression engines such as character classes and functions for finding and replacing pattern matches 
 in strings.
 
-NOTE: Small bug during pattern parsing causing some patterns to not be correctly evaluated.
+What it does:
+  - Preprocesses an input regular expression pattern to make concatenations explicit symbols.
+  - Converts the resulting pattern to its post fix form using the shunting yard algorithm.
+  - Evaluates the post fix pattern. When a character is found, an NFA is constructed according to thompsons
+    construction algorithm and pushed onto a stack of NFA's. When an operator is found, the appropriate number
+    of NFA's are popped off the stack and combined in the way the operator intended, also according to
+    thompsons construction algorithm. The only NFA left in the stack is the final NFA representation of the input pattern.
+  - Provides functions for string matching.
+
+NOTE: Small bug disallowing patterns that involve consecutive kleene stars, EX: "a**", "(a*)*", currently working on fixing this.
