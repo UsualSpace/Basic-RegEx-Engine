@@ -5,3 +5,5 @@ discrete structures course I took in college.
 
 I eventually want to incorporate some of the common features I've seen in other regular expression engines such as character classes and functions for finding and replacing pattern matches 
 in strings.
+
+NOTE: Small bug during pattern parsing causing expressions to be incorrect/unexpected and not be evaluated. Currently fixing.
