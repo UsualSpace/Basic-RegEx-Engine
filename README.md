@@ -15,4 +15,4 @@ What it does:
     thompsons construction algorithm. The only NFA left in the stack is the final NFA representation of the input pattern.
   - Provides functions for string matching.
 
-NOTE: Small bug in my match function not working correctly with NFA's containing epsilon loops.
+NOTE: Small bug in my match function not working correctly with NFA's containing epsilon loops. Currently working on a better algorithm.
