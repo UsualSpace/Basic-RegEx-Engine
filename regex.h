@@ -9,10 +9,6 @@
  *          concatenation, alternation, and kleene closure.
  */
  
-//TODO: Merge TNFA and Regex class as they are only really used together?
-//      Or inherit Regex from TNFA to not have to basically write wrappers for
-//      TNFA specific operations.
- 
 #include "tnfa.h"
 #include <string>
 #include <unordered_set>
