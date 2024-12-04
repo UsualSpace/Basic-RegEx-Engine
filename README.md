@@ -1,4 +1,4 @@
-This project was written in c++17. A small program utilizing the engine can be ran here: https://onlinegdb.com/T8BmPGdQOA
+This project was written in c++17. A small program utilizing the engine can be ran here: https://onlinegdb.com/BVRgjri0ni
 
 I wanted to make this project as a fun little exercise to accompany my interest in finite state automata and regular expressions after first learning about them in a
 discrete structures course I took in college.
@@ -15,4 +15,4 @@ What it does:
     thompsons construction algorithm. The only NFA left in the stack is the final NFA representation of the input pattern.
   - Provides functions for string matching.
 
-NOTE: Small bug in my match function not working correctly with NFA's containing epsilon loops. Currently working on a better algorithm.
+FIXED 12/4/2024! -> NOTE: Small bug in my match function not working correctly with NFA's containing epsilon loops. Currently working on a better algorithm.
