@@ -73,7 +73,6 @@ string Regex::MakeConcatenationExplicit(const string& a_pattern) const {
         }
         result += a_pattern[i];
     }
-    std::cout << result << std::endl;
     return result;
 }
 
@@ -107,7 +106,6 @@ string Regex::RegexToPostFix(const string& a_pattern) const {
         output += operators.top();
         operators.pop();
     }
-    std::cout << output << std::endl;
     return output;
 }
 
