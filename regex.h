@@ -56,6 +56,8 @@ class Regex {
         //Make this a standalone function that returns a TNFA?
         void DoThompsonsConstruction(const string& a_pattern);
         
+        //Computes the set of all reachable states from the current state
+        //via epsilon transitions.
         void GetEpsilonClosure(State* current, unordered_set<State*>& visited) const;
     
         string pattern; //The regex pattern "nfa" will be built upon.
