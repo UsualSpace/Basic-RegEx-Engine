@@ -11,10 +11,12 @@
 #include <string>
 #include <stack>
 #include <unordered_map>
+#include <unordered_set>
 
 using std::string;
 using std::stack;
 using std::unordered_map;
+using std::unordered_set;
 
 //BEGINNING OF REGEX CLASS IMPLEMENTATION
 
@@ -37,46 +39,45 @@ string Regex::GetPattern(void) const {
 }
 
 bool Regex::Match(const string& input) const {
-    bool matched = false;
-    MatchHelper(this->nfa.GetStartState(), input, 0, matched);
-    return matched;
-}
-
-void Regex::MatchHelper(State* current, const string& s, size_t position, bool& matched) const {
-    if(matched) return;
+    //Will hold the set of states the nfa is currently in at any moment.
+    unordered_set<State*> current_states; 
+                                        
+    //Get all states the nfa will be in simultaneously at the start.
+    GetEpsilonClosure(this->nfa.GetStartState(), current_states);
     
-    for(State* next : current->epsilon_transitions) {
-        MatchHelper(next, s, position, matched);
-    }
-
-    if(position >= s.size()) {
-        matched = matched || current->acceptance;
-        return;
+    unordered_set<State*> closure;
+    
+    for(char c : input) {
+        for(State* state : current_states)
+            if(state->symbol_transitions.count(c) > 0)
+                for(State* next_state : state->symbol_transitions.at(c))
+                    GetEpsilonClosure(next_state, closure);
+                    
+        current_states = closure;  
+        closure.clear();  
     }
     
-    auto it = current->symbol_transitions.find(s.at(position));
-    if(it != current->symbol_transitions.end()) {
-        for(State* next : current->symbol_transitions.at(s.at(position))) {
-            MatchHelper(next, s, position + 1, matched);
-        }
-    } 
+    for(State* state : current_states) if(state->acceptance) return true;
+        
+    return false;
 }
 
 //TODO: make this less ugly.
-string Regex::MakeConcatenationExplicit(const string& a_pattern) {
+string Regex::MakeConcatenationExplicit(const string& a_pattern) const {
     std::string result = "";
     for(int i{}; i < a_pattern.size(); ++i) {
         if (i > 0 && 
-            !(a_pattern[i - 1] == '|' || a_pattern[i - 1] == '(' || a_pattern[i - 1] == '*' || a_pattern[i - 1] == '+') &&
+            !(a_pattern[i - 1] == '|' || a_pattern[i - 1] == '(' || a_pattern[i - 1] == '+') &&
             !(a_pattern[i] == '|' || a_pattern[i] == '*' || a_pattern[i] == ')' || a_pattern[i] == '+')) {
             result += '+';
         }
         result += a_pattern[i];
     }
+    std::cout << result << std::endl;
     return result;
 }
 
-string Regex::RegexToPostFix(const string& a_pattern) {
+string Regex::RegexToPostFix(const string& a_pattern) const {
     //Setup for shunting yard algorithm.
     unordered_map<char, int> precedence = {{'*', 3}, {'+', 2}, {'|', 1}};
     stack<char> operators;
@@ -106,6 +107,7 @@ string Regex::RegexToPostFix(const string& a_pattern) {
         output += operators.top();
         operators.pop();
     }
+    std::cout << output << std::endl;
     return output;
 }
 
@@ -141,6 +143,19 @@ void Regex::DoThompsonsConstruction(const string& a_pattern) {
         }
     }
     this->nfa = nfa_stack.top();
+    return;
+}
+
+void Regex::GetEpsilonClosure(State* current, unordered_set<State*>& visited) const {
+    //Mark current state as visited.
+    visited.insert(current);
+    
+    //Visit all other neighboring states of the current state via 
+    //epsilon transitions.
+    for(State* next_state : current->epsilon_transitions)
+        if(visited.count(next_state) == 0)
+            GetEpsilonClosure(next_state, visited);
+            
     return;
 }
 
