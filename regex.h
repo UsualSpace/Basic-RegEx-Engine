@@ -15,8 +15,10 @@
  
 #include "tnfa.h"
 #include <string>
+#include <unordered_set>
 
 using std::string;
+using std::unordered_set;
 
 class Regex {
     public:
@@ -40,23 +42,21 @@ class Regex {
         //TODO: support more regex operations.
         
     private:
-        //Recursively traverses the data member "nfa" to see if the input
-        //string matches the pattern "nfa" was meant to recognize.
-        void MatchHelper(State* current, const string& s, size_t position, bool& matched) const;
-    
         //Inserts a concatenation symbol '+' into a regular expression where
         //it is implicitly implied. Returns a copy of the input but with 
         //explicit concatenation symbols.
-        string MakeConcatenationExplicit(const string& a_pattern);
+        string MakeConcatenationExplicit(const string& a_pattern) const;
     
         //Converts a regular expression string into its post fix form for
         //simple stack evaluation. Returns said post fix form.
-        string RegexToPostFix(const string& a_pattern);
+        string RegexToPostFix(const string& a_pattern) const;
         
         //Constructs an NFA representation of a regex, per the rules 
         //defined by thompsons construction algorithm. TODO:
         //Make this a standalone function that returns a TNFA?
         void DoThompsonsConstruction(const string& a_pattern);
+        
+        void GetEpsilonClosure(State* current, unordered_set<State*>& visited) const;
     
         string pattern; //The regex pattern "nfa" will be built upon.
         
